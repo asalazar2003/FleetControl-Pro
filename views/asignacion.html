@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FleetControl-Pro</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>FleetControl-Pro</h1>
+    <nav>
+      <a href="/">Inicio</a> |
+      <a href="/asignacion">Asignar Vehículo</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="asignar-vehiculo">
+      <h2>Seleccione un vehículo y asigne</h2>
+
+      <form>
+        <div class="form-group">
+          <label for="vehiculo">Vehículo</label>
+          <select id="vehiculo">
+            <option value="vehiculo1">Camioneta</option> <!--Opciones desde la base de datos-->
+            <option value="vehiculo2">Auto Promedio</option>
+            <option value="vehiculo3">Ferrari</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="persona">Empleado</label>
+          <select id="persona">
+            <option value="persona1">Juan Pérez</option> <!--Opciones desde la base de datos-->
+            <option value="persona2">María Gómez</option>
+            <option value="persona3">Carlos Díaz</option>
+            <option value="persona4">Ana Martínez</option>
+          </select>
+        </div>
+
+        <button type="submit">Asignar Vehículo</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 FleetControl-Pro Copyright</p>
+  </footer>
+</body>
+</html>
