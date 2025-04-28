@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estado de Vehículos - FleetControl-Pro</title>
+  <link rel="stylesheet" href="/style.css"> </head>
+<body>
+  <header>
+    <h1>FleetControl-Pro</h1>
+    <nav>
+      <a href="/dashboard">Dashboard</a> |
+      <a href="/asignacion">Asignar Vehículo</a> |
+      <a href="/status">Estado de Vehículos</a> |
+      <a href="/vehiculos">Gestión de Vehículos</a> |
+      <a href="/">Cerrar Sesion</a> 
+    </nav>
+  </header>
+
+  <main>
+    <div class="container"> <section class="status-vehiculos section-card">
+        <h2>Estado Actual de la Flota</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Vehículo (ID/Patente)</th>
+                <th>Estado</th>
+                <th>Asignado a</th>
+                <th>Problema Reportado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Camioneta (ABCD12)</td>
+                <td><span class="status-ok">Disponible</span></td>
+                <td>N/A</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Auto Promedio (EFGH34)</td>
+                <td><span class="status-uso">En Uso</span></td>
+                <td>María Gómez</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td>Ferrari (IJKL56)</td>
+                <td><span class="status-mant">Mantenimiento</span></td>
+                <td>N/A</td>
+                <td>Sí (Ver abajo)</td>
+              </tr>
+               <tr>
+                <td>Camioneta (MNOP78)</td>
+                <td><span class="status-ok">Disponible</span></td>
+                <td>N/A</td>
+                <td>No</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="reportar-problema section-card">
+        <h2>Reportar un Problema</h2>
+        <form> <div class="form-group">
+            <label for="vehiculo-problema">Seleccionar Vehículo</label>
+            <select id="vehiculo-problema">
+              <option value="vehiculo1">Camioneta (ABCD12)</option>
+              <option value="vehiculo2">Auto Promedio (EFGH34)</option>
+              <option value="vehiculo3">Ferrari (IJKL56)</option>
+              <option value="vehiculo4">Camioneta (MNOP78)</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="descripcion-problema">Descripción del Problema</label>
+            <textarea id="descripcion-problema" rows="4" placeholder="Describe el problema encontrado..."></textarea>
+          </div>
+          <button type="button">Reportar Problema</button> </form>
+      </section>
+
+      <section class="asignar-reparacion section-card">
+        <h2>Problemas Reportados</h2>
+         <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Vehículo</th>
+                <th>Problema Descrito</th>
+                <th>Reportado Por</th>
+                <th>Estado Reparación</th>
+                <th>Mecánico Asignado</th>
+                <th>Asignar Mecánico</th> </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ferrari (IJKL56)</td>
+                <td>Ruido extraño en el motor al acelerar.</td>
+                <td>Juan Pérez</td>
+                <td><span class="status-rep">Reportado</span></td>
+                <td>N/A</td>
+                <td>
+                  <select class="select-mecanico" name="asignar-mecanico-1">
+                    <option value="" disabled selected>-- Seleccionar --</option>
+                    <option value="mecanico_a">Carlos (Interno)</option>
+                    <option value="mecanico_b">Taller Externo Alfa</option>
+                    <option value="mecanico_c">Mecánico Jefe</option>
+                    </select>
+                  </td>
+              </tr>
+              <tr>
+                <td>Auto Promedio (EFGH34)</td>
+                <td>Luz de check engine encendida.</td>
+                <td>María Gómez</td>
+                <td><span class="status-proc">En Proceso</span></td>
+                <td>Carlos (Externo)</td>
+                <td>N/A</td> </tr>
+              <tr>
+                <td>Camioneta (ABCD12)</td>
+                <td>Fuga de aceite leve.</td>
+                <td>Ana Martínez</td>
+                <td><span class="status-rep">Reportado</span></td>
+                <td>N/A</td>
+                 <td>
+                   <select class="select-mecanico" name="asignar-mecanico-2">
+                     <option value="" disabled selected>-- Seleccionar --</option>
+                     <option value="mecanico_a">Carlos (Interno)</option>
+                     <option value="mecanico_b">Taller Externo Alfa</option>
+                     <option value="mecanico_c">Mecánico Jefe</option>
+                   </select>
+                 </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div> </main>
+
+  <footer>
+    <p>&copy; 2025 FleetControl-Pro Copyright</p> </footer>
+</body>
+</html>

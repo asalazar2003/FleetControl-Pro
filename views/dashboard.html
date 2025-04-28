@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - FleetControl-Pro</title>
+  <link rel="stylesheet" href="/style.css"> </head>
+<body>
+  <header>
+    <h1>FleetControl-Pro</h1>
+    <nav>
+        <a href="/dashboard">Dashboard</a> |
+        <a href="/asignacion">Asignar Vehículo</a> |
+        <a href="/status">Estado de Vehículos</a> |
+        <a href="/vehiculos">Gestión de Vehículos</a> |
+        <a href="/">Cerrar Sesion</a> 
+    </nav>
+  </header>
+
+  <main>
+    <div class="container dashboard-container"> <h2>Panel Principal</h2>
+
+      <section class="summary-stats">
+        <div class="stat-card">
+          <h3>Total Vehículos</h3>
+          <p class="stat-number">4</p> </div>
+        <div class="stat-card">
+          <h3>Disponibles</h3>
+          <p class="stat-number stat-ok">2</p> </div>
+        <div class="stat-card">
+          <h3>En Uso</h3>
+          <p class="stat-number stat-uso">1</p> </div>
+        <div class="stat-card">
+          <h3>Mantenimiento</h3>
+          <p class="stat-number stat-mant">1</p> </div>
+      </section>
+
+      <section class="alerts section-card">
+        <h3>Alertas Importantes</h3>
+        <ul>
+          <li><span class="status-mant">ALERTA:</span> Ferrari (IJKL56) requiere atención (Problema reportado).</li>
+          <li><span class="status-uso">INFO:</span> Próximo mantenimiento para Camioneta (ABCD12) en 15 días.</li>
+          <li><span class="status-ok">OK:</span> No hay más alertas urgentes.</li>
+          </ul>
+      </section>
+
+      <section class="recent-activity section-card">
+        <h3>Actividad Reciente</h3>
+        <ul>
+          <li><span class="timestamp">[Hoy 10:30]</span> Problema reportado para Ferrari (IJKL56) por Juan Pérez.</li>
+          <li><span class="timestamp">[Ayer 15:00]</span> Auto Promedio (EFGH34) asignado a María Gómez.</li>
+          <li><span class="timestamp">[Ayer 09:00]</span> Camioneta (MNOP78) devuelta, ahora disponible.</li>
+          </ul>
+      </section>
+
+      <section class="quick-links section-card">
+        <h3>Accesos Rápidos</h3>
+        <div class="quick-links-buttons">
+          <a href="/asignacion" class="button-link">Asignar Vehículo</a>
+          <a href="/status" class="button-link">Ver Estado de Vehículos</a>
+          </div>
+      </section>
+
+    </div> </main>
+
+  <footer>
+    <p>&copy; 2025 FleetControl-Pro Copyright</p>
+  </footer>
+</body>
+</html>

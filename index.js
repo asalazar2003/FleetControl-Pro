@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
 
 // Archivos estáticos (CSS, imágenes, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -16,6 +15,16 @@ app.get('/asignacion', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'asignacion.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor funcionando en http://localhost:${PORT}`);
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
+
+app.get('/status', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'status.html'));
+});
+
+app.get('/vehiculos', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'vehiculos.html'));
+});
+
+module.exports = app

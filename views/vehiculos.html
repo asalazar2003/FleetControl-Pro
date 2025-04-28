@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Vehículos - FleetControl-Pro</title>
+  <link rel="stylesheet" href="/style.css"> </head>
+<body>
+  <header>
+    <h1>FleetControl-Pro</h1>
+    <nav>
+      <a href="/dashboard">Dashboard</a> |
+      <a href="/asignacion">Asignar Vehículo</a> |
+      <a href="/status">Estado de Vehículos</a> |
+      <a href="/vehiculos">Gestión de Vehículos</a> | 
+      <a href="/">Cerrar Sesion</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container"> <section class="section-card"> <h2>Inventario de Vehículos</h2>
+
+        <div class="table-container"> <table>
+            <thead>
+              <tr>
+                <th>Patente / ID</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Año</th>
+                <th>Estado</th>
+                <th>Asignado a</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ABCD12</td>
+                <td>Toyota</td>
+                <td>Hilux</td>
+                <td>2021</td>
+                <td><span class="status-ok">Disponible</span></td>
+                <td>N/A</td>
+                <td><button type="button" class="btn-details">Ver Detalles</button></td>
+              </tr>
+              <tr>
+                <td>EFGH34</td>
+                <td>Kia</td>
+                <td>Morning</td>
+                <td>2020</td>
+                <td><span class="status-uso">En Uso</span></td>
+                <td>María Gómez</td>
+                 <td><button type="button" class="btn-details">Ver Detalles</button></td>
+              </tr>
+              <tr>
+                <td>IJKL56</td>
+                <td>Ferrari</td>
+                <td>F8 Tributo</td>
+                <td>2023</td>
+                <td><span class="status-mant">Mantenimiento</span></td>
+                <td>N/A</td>
+                 <td><button type="button" class="btn-details">Ver Detalles</button></td>
+              </tr>
+               <tr>
+                <td>MNOP78</td>
+                <td>Chevrolet</td>
+                <td>NPR 816</td>
+                <td>2019</td>
+                 <td><span class="status-ok">Disponible</span></td>
+                <td>N/A</td>
+                 <td><button type="button" class="btn-details">Ver Detalles</button></td>
+              </tr>
+              </tbody>
+          </table>
+        </div>
+        </section> </div> </main>
+
+  <footer>
+    <p>&copy; 2025 FleetControl-Pro Copyright</p>
+  </footer>
+</body>
+</html>
