@@ -1,3 +1,5 @@
+/* public/style.css */
+
 * {
   margin: 0;
   padding: 0;
@@ -8,12 +10,13 @@ html, body {
   height: 100%;
   background-color: black;
   color: white;
-  font-family: sans-serif;
+  font-family: sans-serif; /* Usar una fuente sans-serif genérica como base */
 }
 
 body {
   display: flex;
   flex-direction: column;
+  line-height: 1.6; /* Mejorar legibilidad general */
 }
 
 header {
@@ -22,16 +25,38 @@ header {
   text-align: center;
 }
 
-nav a {
-  color: white;
-  margin: 0 1rem;
-  text-decoration: none;
-  font-weight: bold;
+header h1 {
+  color: #fff;
+  margin-bottom: 0.5rem;
 }
 
-nav a:hover {
-  text-decoration: underline;
+nav a {
+  color: #e0e0e0; /* Un blanco ligeramente más suave para enlaces de navegación */
+  margin: 0 0.8rem; /* Espaciado ajustado */
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+nav a:hover, nav a.active { /* Clase 'active' para la página actual, si la implementas con JS */
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+}
+
+/* Estilo específico para el botón "Cerrar Sesión" */
+nav a[href="/"] { /* Asumiendo que "/" es cerrar sesión como en tu HTML */
+  background-color: #dc3545; /* Rojo */
+  color: white;
+}
+
+nav a[href="/"]:hover {
+  background-color: #c82333; /* Rojo más oscuro */
+  color: white;
+}
+
 
 main {
   flex: 1;
@@ -40,186 +65,210 @@ main {
 
 footer {
   background-color: #222;
-  color: white;
+  color: #ccc; /* Color de texto más suave para el footer */
   text-align: center;
-  padding: 1rem;
+  padding: 1.5rem; /* Más padding */
   margin-top: auto;
+  border-top: 1px solid #333; /* Línea sutil de separación */
 }
 
 footer p {
   margin: 0;
+  font-size: 0.9rem;
 }
 
-.login {
-  max-width: 450px; 
-  width: 100%;     
-  padding: 2rem;
-  background-color: #444;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin: auto;
-}
-
-.login h2 {
-  margin-bottom: 1.5rem; 
-  text-align: center;
-  color: #eee; 
-}
-
-.login button {
-   margin-top: 1rem; 
-}
-
-.asignar-vehiculo {
-  max-width: 600px;
-  width: 100%;
-  padding: 2rem;
-  background-color: #444;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: auto;
-}
-
-.asignar-vehiculo h2 {
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
+/* --- Estilos de Formularios --- */
 .form-group {
   margin-bottom: 1.5rem;
 }
 
-label {
+.form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-}
-
-select, input[type="text"], input[type="password"], textarea {
-  width: 100%;
-  padding: 0.8rem;
+  margin-bottom: 0.6rem; /* Más espacio */
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #222;
-  color: white;
+  color: #f0f0f0;
+  font-weight: bold;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-button {
+/* Estilos generales para todos los inputs, selects y textareas */
+select,
+input[type="text"],
+input[type="password"],
+input[type="email"], /* Añadido por si lo usas */
+input[type="number"], /* Añadido por si lo usas */
+textarea,
+input[type="date"] {
   width: 100%;
-  padding: 1rem;
-  background-color: #28a745;
+  padding: 0.8rem 1rem; /* Padding ajustado */
+  font-size: 1rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #2d2d2d;
+  color: white;
+  font-family: inherit; /* Heredar la fuente del body */
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1.5; /* Para consistencia vertical, especialmente útil para input[type="date"] */
+}
+
+/* Placeholder styling */
+select::placeholder,
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="email"]::placeholder,
+input[type="number"]::placeholder,
+textarea::placeholder,
+input[type="date"]::placeholder { /* Aunque date no siempre tiene placeholder visible */
+  color: #888;
+  opacity: 1; /* Asegurar que sea visible en Firefox */
+}
+
+/* Estilos específicos para input[type="date"] */
+input[type="date"] {
+  position: relative; /* Para el posicionamiento del ícono si fuera necesario manualmente */
+  /* El padding ya está definido arriba, no es necesario repetirlo aquí */
+}
+
+/* Estilizando el indicador del calendario para WebKit (Chrome, Edge, Safari, Opera) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  padding: 5px; /* Espacio alrededor del ícono para formar el círculo */
+  border-radius: 50%; /* Hace el fondo circular */
+  background-color: #007bff; /* Color de fondo del círculo (azul) */
+  
+  /* Intentar hacer el ícono del calendario blanco/claro para contraste */
+  filter: invert(1) brightness(1.5); 
+  /* Ajusta 'brightness' si es demasiado o muy poco brillante.
+     Si necesitas un tinte específico para el ícono, usa el filter más complejo:
+     filter: invert(1) sepia(1) saturate(5000%) hue-rotate(180deg) brightness(0.8) contrast(1.5); */
+
+  opacity: 0.85;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  
+  /* Para que el ícono no se estire o se corte dentro del círculo */
+  background-size: contain; 
+  width: auto; 
+  height: auto;
+
+  /* Descomentar y ajustar si el ícono no está bien posicionado:
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #0056b3;
+  opacity: 1;
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+input[type="date"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); 
+}
+
+select {
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23cccccc%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 0.8em;
+  padding-right: 2.5rem; 
+}
+
+
+.login,
+.asignar-vehiculo {
+  max-width: 550px; 
+  width: 90%;
+  padding: 2rem 2.5rem; 
+  background-color: #3a3a3a;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  margin: 2rem auto;
+}
+
+.login h2,
+.asignar-vehiculo h2 {
+  margin-bottom: 2rem; 
+  text-align: center;
+  color: #fff;
+  font-size: 1.8rem; 
+}
+
+.login button,
+.asignar-vehiculo button[type="submit"] { 
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background-color: #28a745; 
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #218838;
-}
-
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.section-card {
-  background-color: #444;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.section-card h2, .section-card h3 {
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #eee;
-}
-
-.table-container {
-   overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-th, td {
-  border: 1px solid #555;
-  padding: 0.8rem 1rem;
-  text-align: left;
-  color: #ddd;
-}
-
-th {
-  background-color: #333;
-  color: white;
   font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 1rem; 
 }
 
-.status-ok { color: #28a745; font-weight: bold; }
-.status-uso { color: #ffc107; font-weight: bold; }
-.status-mant { color: #dc3545; font-weight: bold; }
-.status-rep { color: #ffc107; font-weight: bold; }
-.status-proc { color: #17a2b8; font-weight: bold; }
-
-.select-mecanico {
-  padding: 0.3rem 0.5rem;
-  font-size: 0.9rem;
+.login button:hover,
+.asignar-vehiculo button[type="submit"]:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+.login button:active,
+.asignar-vehiculo button[type="submit"]:active {
+  transform: translateY(0px);
 }
 
-.reportar-problema form, .asignar-reparacion form {
-  max-width: 500px;
-  margin: 0 auto;
-}
 
 .dashboard-container h2 {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   color: #eee;
+  font-size: 2rem;
 }
 
 .summary-stats {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
-  justify-content: space-around;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .stat-card {
-  background-color: #444;
-  padding: 1.5rem;
+  background-color: #3a3a3a;
+  padding: 1.8rem; 
   border-radius: 8px;
   text-align: center;
-  flex: 1;
-  min-width: 150px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  border-left: 5px solid;
 }
 
+.stat-card:nth-child(1) { border-left-color: #007bff; }
+.stat-card:nth-child(2) { border-left-color: #28a745; }
+.stat-card:nth-child(3) { border-left-color: #ffc107; }
+.stat-card:nth-child(4) { border-left-color: #dc3545; } 
+
+
 .stat-card h3 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   font-size: 1.1rem;
   color: #ccc;
-  text-align: center;
 }
 
 .stat-number {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: bold;
   color: white;
 }
@@ -228,15 +277,34 @@ th {
 .stat-number.stat-uso { color: #ffc107; }
 .stat-number.stat-mant { color: #dc3545; }
 
+.section-card {
+  background-color: #3a3a3a;
+  padding: 1.8rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  margin-bottom: 2rem;
+}
+
+.section-card h3 {
+  margin-bottom: 1.5rem;
+  text-align: left; 
+  color: #eee;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #555;
+  padding-bottom: 0.8rem;
+}
+
 .section-card ul {
   list-style: none;
   padding-left: 0;
 }
 
 .section-card li {
-  padding: 0.6rem 0;
-  border-bottom: 1px solid #555;
+  padding: 0.8rem 0.5rem; 
+  border-bottom: 1px solid #4f4f4f; 
   color: #ddd;
+  display: flex; 
+  align-items: flex-start;
 }
 
 .section-card li:last-child {
@@ -244,16 +312,17 @@ th {
 }
 
 .section-card .timestamp {
-  color: #aaa;
-  font-size: 0.9em;
-  margin-right: 0.5rem;
+  color: #999;
+  font-size: 0.85em;
+  margin-right: 0.8rem;
+  white-space: nowrap; 
 }
 
 .quick-links-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: center;
+  justify-content: flex-start; 
 }
 
 .button-link {
@@ -265,67 +334,179 @@ th {
   border-radius: 4px;
   font-size: 1rem;
   text-align: center;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease;
   border: none;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .button-link:hover {
   background-color: #0056b3;
   color: white;
-  text-decoration: none;
+}
+
+
+.container { 
+  width: 95%;
+  max-width: 1400px; 
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.table-container {
+   overflow-x: auto;
+   background-color: #3a3a3a; 
+   padding: 1rem;
+   border-radius: 8px;
+   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+th, td {
+  border: 1px solid #4f4f4f;
+  padding: 0.9rem 1.2rem;
+  text-align: left;
+  color: #ddd;
+  vertical-align: middle; 
+}
+
+th {
+  background-color: #2c3e50; 
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase; 
+  font-size: 0.85rem;
+}
+
+tr:nth-child(even) {
+  background-color: #33333360;
+}
+tr:hover {
+    background-color: #007bff30; 
+}
+
+.status-ok    { color: #2ecc71; font-weight: bold; }
+.status-uso   { color: #f1c40f; font-weight: bold; } 
+.status-mant  { color: #e74c3c; font-weight: bold; }
+.status-rep   { color: #f39c12; font-weight: bold; } 
+.status-proc  { color: #3498db; font-weight: bold; }
+
+.select-mecanico {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  background-color: #2d2d2d; 
+  color: white;
+  border: 1px solid #555;
+  border-radius: 4px;
 }
 
 .btn-details {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
-  background-color: #6c757d; 
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  background-color: #546e7a;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease;
   width: auto;
+  font-weight: 500;
 }
 .btn-details:hover {
-  background-color: #5a6268;
+  background-color: #455a64;
 }
 
-nav a:last-child {
-  background-color: #dc3545;
-  color: white;
-  padding: 0.5em 1em;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
-  margin-left: 1.5rem;
-  transition: background-color 0.3s ease;
+.reportar-problema form, .asignar-reparacion form { /* Si hay un form dentro */
+  max-width: 550px; /* Consistente con otros formularios */
+  margin: 0 auto;
 }
 
-nav a:last-child:hover {
-  background-color: #c82333;
-  color: white;
-  text-decoration: none;
+#asignacionMensaje {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 500;
 }
 
 @media (max-width: 768px) {
-  th, td {
-    padding: 0.5rem;
+  nav a {
+    margin: 0 0.5rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
   }
-  .container {
-      width: 95%;
+
+  main {
+    padding: 1rem;
   }
-  .section-card h2, .section-card h3 { /* Aplica a ambos titulos dentro de cards */
-      font-size: 1.3rem;
+
+  .login, .asignar-vehiculo {
+    padding: 1.5rem;
+  }
+  .login h2, .asignar-vehiculo h2 {
+    font-size: 1.5rem;
+  }
+
+  .summary-stats {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Columnas más pequeñas en móvil */
+    gap: 1rem;
   }
   .stat-card {
-      min-width: 120px;
-      padding: 1rem;
+    padding: 1rem;
   }
   .stat-number {
-      font-size: 2rem;
+    font-size: 2rem;
   }
-  .dashboard-container h2 { /* Ajusta tamaño del título principal en móvil */
-      font-size: 1.5rem;
+  .dashboard-container h2 {
+    font-size: 1.6rem;
   }
+
+  .section-card h3 {
+    font-size: 1.3rem;
+  }
+  .section-card li {
+    flex-direction: column; /* Timestamp arriba del texto */
+    align-items: flex-start;
+  }
+  .section-card .timestamp {
+    margin-bottom: 0.3rem;
+  }
+
+  th, td {
+    padding: 0.6rem 0.8rem; /* Menos padding en tablas */
+    font-size: 0.85rem;
+  }
+  th {
+    font-size: 0.75rem;
+  }
+
+  .button-link, .btn-details {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    nav a {
+        display: block; /* Que ocupen todo el ancho */
+    }
+    .summary-stats {
+      grid-template-columns: 1fr 1fr; /* Dos columnas fijas en pantallas muy pequeñas */
+    }
 }

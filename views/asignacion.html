@@ -21,31 +21,176 @@
   <main>
     <section class="asignar-vehiculo">
       <h2>Seleccione un vehículo y asigne</h2>
-
-      <form>
+      <form id="formAsignacion">
         <div class="form-group">
-          <label for="vehiculo">Vehículo</label>
-          <select id="vehiculo">
-            <option value="vehiculo1">Camioneta</option>
-            <option value="vehiculo2">Auto Promedio</option>
-            <option value="vehiculo3">Ferrari</option>
+          <label for="selectVehiculo">Vehículo</label>
+          <select id="selectVehiculo" name="id_vehiculo" required>
+            <option value="">Cargando vehículos...</option>
           </select>
         </div>
-
+  
         <div class="form-group">
-          <label for="persona">Empleado</label>
-          <select id="persona">
-            <option value="persona1">Juan Pérez</option>
-            <option value="persona2">María Gómez</option>
-            <option value="persona3">Carlos Díaz</option>
-            <option value="persona4">Ana Martínez</option>
+          <label for="selectEmpleado">Empleado</label>
+          <select id="selectEmpleado" name="id_empleado" required>
+            <option value="">Cargando empleados...</option>
           </select>
         </div>
-
+  
+        <div class="form-group">
+          <label for="fechaInicio">Fecha de Inicio</label>
+          <input type="date" id="fechaInicio" name="fecha_inicio" required>
+        </div>
+  
+        <div class="form-group">
+          <label for="fechaFin">Fecha de Fin (Opcional)</label>
+          <input type="date" id="fechaFin" name="fecha_fin">
+        </div>
+  
+        <div class="form-group">
+          <label for="motivoUso">Motivo de Uso</label>
+          <textarea id="motivoUso" name="motivo_uso" rows="3" placeholder="Ej: Visita a cliente, diligencia..."></textarea>
+        </div>
+  
         <button type="submit">Asignar Vehículo</button>
+        <p id="asignacionMensaje" style="margin-top: 10px;"></p>
       </form>
     </section>
   </main>
+  
+  <script>
+    // Referencias a los elementos del DOM
+    const selectVehiculoEl = document.getElementById('selectVehiculo');
+    const selectEmpleadoEl = document.getElementById('selectEmpleado');
+    const formAsignacionEl = document.getElementById('formAsignacion');
+    const asignacionMensajeEl = document.getElementById('asignacionMensaje');
+    const fechaInicioEl = document.getElementById('fechaInicio');
+    const fechaFinEl = document.getElementById('fechaFin');
+  
+    // Función para cargar vehículos disponibles
+    async function cargarVehiculosDisponibles() {
+      try {
+        const response = await fetch('/api/vehiculos');
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        const vehiculos = await response.json();
+        
+        selectVehiculoEl.innerHTML = '<option value="">-- Seleccione un Vehículo --</option>'; // Opción por defecto
+        if (vehiculos.length === 0) {
+            selectVehiculoEl.innerHTML += '<option value="" disabled>No hay vehículos disponibles</option>';
+        }
+        vehiculos.forEach(v => {
+          const option = document.createElement('option');
+          option.value = v.id_vehiculo;
+          option.textContent = `${v.marca} ${v.modelo} (Matrícula: ${v.matricula})`;
+          selectVehiculoEl.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error al cargar vehículos:', error);
+        selectVehiculoEl.innerHTML = '<option value="">Error al cargar vehículos</option>';
+        asignacionMensajeEl.textContent = 'Error al cargar la lista de vehículos.';
+      }
+    }
+  
+    // Función para cargar empleados
+    async function cargarEmpleados() {
+      try {
+        const response = await fetch('/api/empleados');
+         if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        const empleados = await response.json();
+        
+        selectEmpleadoEl.innerHTML = '<option value="">-- Seleccione un Empleado --</option>'; // Opción por defecto
+        if (empleados.length === 0) {
+            selectEmpleadoEl.innerHTML += '<option value="" disabled>No hay empleados registrados</option>';
+        }
+        empleados.forEach(e => {
+          const option = document.createElement('option');
+          option.value = e.id_empleado;
+          option.textContent = `${e.nombre} ${e.apellido}`;
+          selectEmpleadoEl.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error al cargar empleados:', error);
+        selectEmpleadoEl.innerHTML = '<option value="">Error al cargar empleados</option>';
+        asignacionMensajeEl.textContent = 'Error al cargar la lista de empleados.';
+      }
+    }
+  
+    // Event listener para el envío del formulario
+    formAsignacionEl.addEventListener('submit', async function(event) {
+      event.preventDefault(); // Prevenir el envío tradicional del formulario
+      asignacionMensajeEl.textContent = 'Procesando asignación...';
+      asignacionMensajeEl.style.color = 'white';
+  
+  
+      const data = {
+        id_vehiculo: selectVehiculoEl.value,
+        id_empleado: selectEmpleadoEl.value,
+        fecha_inicio: fechaInicioEl.value,
+        fecha_fin: fechaFinEl.value || null, // Enviar null si está vacío para que la BD lo tome como NULL
+        motivo_uso: document.getElementById('motivoUso').value
+      };
+  
+      // Validación simple en el cliente
+      if (!data.id_vehiculo || !data.id_empleado || !data.fecha_inicio) {
+        asignacionMensajeEl.textContent = 'Por favor, seleccione vehículo, empleado e ingrese la fecha de inicio.';
+        asignacionMensajeEl.style.color = 'orange';
+        return;
+      }
+      if (data.fecha_fin && new Date(data.fecha_fin) < new Date(data.fecha_inicio)) {
+          asignacionMensajeEl.textContent = 'La fecha de fin no puede ser anterior a la fecha de inicio.';
+          asignacionMensajeEl.style.color = 'orange';
+          return;
+      }
+  
+      try {
+        const response = await fetch('/api/asignaciones', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+  
+        const result = await response.json(); // Intenta parsear como JSON siempre
+  
+        if (response.ok) { // Status 200-299
+          asignacionMensajeEl.textContent = result.message || '¡Vehículo asignado con éxito!';
+          asignacionMensajeEl.style.color = 'lightgreen';
+          formAsignacionEl.reset(); // Limpiar el formulario
+          cargarVehiculosDisponibles(); // Recargar la lista de vehículos por si cambió la disponibilidad
+        } else { // Status 4xx, 5xx
+          asignacionMensajeEl.textContent = `Error: ${result.error || response.statusText}`;
+          asignacionMensajeEl.style.color = 'salmon';
+        }
+      } catch (error) {
+        console.error('Error de red o al procesar la asignación:', error);
+        asignacionMensajeEl.textContent = 'Error de conexión al intentar asignar el vehículo.';
+        asignacionMensajeEl.style.color = 'salmon';
+      }
+    });
+  
+    // Cargar datos iniciales cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', () => {
+      // Establecer fecha mínima para fecha_inicio como hoy
+      const hoy = new Date().toISOString().split('T')[0];
+      fechaInicioEl.setAttribute('min', hoy);
+      
+      // Si hay fecha_inicio, fecha_fin no puede ser anterior
+      fechaInicioEl.addEventListener('change', () => {
+          if (fechaInicioEl.value) {
+              fechaFinEl.setAttribute('min', fechaInicioEl.value);
+          } else {
+              fechaFinEl.removeAttribute('min');
+          }
+      });
+  
+      cargarVehiculosDisponibles();
+      cargarEmpleados();
+    });
+  </script>
 
   <footer>
     <p>&copy; 2025 FleetControl-Pro Copyright</p>
