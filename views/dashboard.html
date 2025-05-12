@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - FleetControl-Pro</title>
-  <link rel="stylesheet" href="/style.css"> </head>
+  <link rel="stylesheet" href="/style.css">
+</head>
 <body>
   <header>
     <h1>FleetControl-Pro</h1>
@@ -13,44 +14,41 @@
         <a href="/asignacion">Asignar Vehículo</a> |
         <a href="/status">Estado de Vehículos</a> |
         <a href="/vehiculos">Gestión de Vehículos</a> |
-        <a href="/">Cerrar Sesion</a> 
+        <a href="#" id="logoutButton">Cerrar Sesion</a>
     </nav>
   </header>
 
   <main>
-    <div class="container dashboard-container"> <h2>Panel Principal</h2>
+    <div class="container dashboard-container">
+      <h2>Panel Principal</h2>
 
       <section class="summary-stats">
         <div class="stat-card">
           <h3>Total Vehículos</h3>
-          <p class="stat-number">4</p> </div>
+          <p class="stat-number" id="totalVehiculosStat">--</p> </div>
         <div class="stat-card">
           <h3>Disponibles</h3>
-          <p class="stat-number stat-ok">2</p> </div>
+          <p class="stat-number stat-ok" id="disponiblesStat">--</p> </div>
         <div class="stat-card">
           <h3>En Uso</h3>
-          <p class="stat-number stat-uso">1</p> </div>
+          <p class="stat-number stat-uso" id="enUsoStat">--</p> </div>
         <div class="stat-card">
           <h3>Mantenimiento</h3>
-          <p class="stat-number stat-mant">1</p> </div>
+          <p class="stat-number stat-mant" id="mantenimientoStat">--</p> </div>
       </section>
 
       <section class="alerts section-card">
         <h3>Alertas Importantes</h3>
-        <ul>
-          <li><span class="status-mant">ALERTA:</span> Ferrari (IJKL56) requiere atención (Problema reportado).</li>
-          <li><span class="status-uso">INFO:</span> Próximo mantenimiento para Camioneta (ABCD12) en 15 días.</li>
-          <li><span class="status-ok">OK:</span> No hay más alertas urgentes.</li>
-          </ul>
+        <ul id="listaAlertas">
+          <li>Cargando alertas...</li>
+        </ul>
       </section>
 
       <section class="recent-activity section-card">
         <h3>Actividad Reciente</h3>
-        <ul>
-          <li><span class="timestamp">[Hoy 10:30]</span> Problema reportado para Ferrari (IJKL56) por Juan Pérez.</li>
-          <li><span class="timestamp">[Ayer 15:00]</span> Auto Promedio (EFGH34) asignado a María Gómez.</li>
-          <li><span class="timestamp">[Ayer 09:00]</span> Camioneta (MNOP78) devuelta, ahora disponible.</li>
-          </ul>
+        <ul id="listaActividadReciente">
+          <li>Cargando actividad...</li>
+        </ul>
       </section>
 
       <section class="quick-links section-card">
@@ -58,13 +56,112 @@
         <div class="quick-links-buttons">
           <a href="/asignacion" class="button-link">Asignar Vehículo</a>
           <a href="/status" class="button-link">Ver Estado de Vehículos</a>
-          </div>
+        </div>
       </section>
 
-    </div> </main>
+    </div>
+  </main>
 
   <footer>
     <p>&copy; 2025 FleetControl-Pro Copyright</p>
   </footer>
+
+  <script>
+    // Script para "proteger" la página y manejar el logout
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = sessionStorage.getItem('fleetControlUserLoggedIn');
+        const userDataString = sessionStorage.getItem('fleetControlUserData');
+        
+        if (isLoggedIn !== 'true' || !userDataString) {
+            window.location.href = '/'; // Redirige a la página de login
+        } else {
+            const userData = JSON.parse(userDataString);
+            console.log('Usuario logueado en Dashboard:', userData.nombreUsuario);
+            // Cargar datos del dashboard una vez verificado el login
+            cargarDatosDashboard();
+        }
+
+        const logoutButtonEl = document.getElementById('logoutButton');
+        if (logoutButtonEl) {
+            logoutButtonEl.addEventListener('click', function(event) {
+                event.preventDefault();
+                sessionStorage.removeItem('fleetControlUserLoggedIn');
+                sessionStorage.removeItem('fleetControlUserData');
+                window.location.href = '/';
+            });
+        }
+    });
+
+    // Función para cargar y mostrar los datos del dashboard
+    async function cargarDatosDashboard() {
+        const totalVehiculosEl = document.getElementById('totalVehiculosStat');
+        const disponiblesEl = document.getElementById('disponiblesStat');
+        const enUsoEl = document.getElementById('enUsoStat');
+        const mantenimientoEl = document.getElementById('mantenimientoStat');
+        const listaAlertasEl = document.getElementById('listaAlertas');
+        const listaActividadEl = document.getElementById('listaActividadReciente');
+
+        // Indicar carga
+        totalVehiculosEl.textContent = '...';
+        disponiblesEl.textContent = '...';
+        enUsoEl.textContent = '...';
+        mantenimientoEl.textContent = '...';
+        listaAlertasEl.innerHTML = '<li>Cargando alertas...</li>';
+        listaActividadEl.innerHTML = '<li>Cargando actividad...</li>';
+
+        try {
+            const response = await fetch('/api/dashboard/summary');
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            const data = await response.json();
+
+            // Actualizar estadísticas de vehículos
+            totalVehiculosEl.textContent = data.stats.totalVehiculos !== undefined ? data.stats.totalVehiculos : '--';
+            disponiblesEl.textContent = data.stats.disponibles !== undefined ? data.stats.disponibles : '--';
+            enUsoEl.textContent = data.stats.enUso !== undefined ? data.stats.enUso : '--';
+            mantenimientoEl.textContent = data.stats.mantenimiento !== undefined ? data.stats.mantenimiento : '--';
+
+            // Actualizar alertas
+            listaAlertasEl.innerHTML = ''; // Limpiar
+            if (data.alertas && data.alertas.length > 0) {
+                data.alertas.forEach(alerta => {
+                    const li = document.createElement('li');
+                    // Aplicar clase de status si existe
+                    let statusClass = '';
+                    if (alerta.tipo === 'MANTENIMIENTO') statusClass = 'status-mant';
+                    else if (alerta.tipo === 'REPORTE') statusClass = 'status-rep';
+
+                    li.innerHTML = `<span class="${statusClass}">${alerta.tipo_display || alerta.tipo}:</span> ${alerta.mensaje}`;
+                    listaAlertasEl.appendChild(li);
+                });
+            } else {
+                listaAlertasEl.innerHTML = '<li><span class="status-ok">OK:</span> No hay alertas urgentes.</li>';
+            }
+
+            // Actualizar actividad reciente
+            listaActividadEl.innerHTML = ''; // Limpiar
+            if (data.actividadReciente && data.actividadReciente.length > 0) {
+                data.actividadReciente.forEach(actividad => {
+                    const li = document.createElement('li');
+                    const fecha = new Date(actividad.fecha).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    li.innerHTML = `<span class="timestamp">[${fecha}]</span> ${actividad.descripcion}`;
+                    listaActividadEl.appendChild(li);
+                });
+            } else {
+                listaActividadEl.innerHTML = '<li>No hay actividad reciente para mostrar.</li>';
+            }
+
+        } catch (error) {
+            console.error('Error al cargar datos del dashboard:', error);
+            totalVehiculosEl.textContent = 'Error';
+            disponiblesEl.textContent = 'Error';
+            enUsoEl.textContent = 'Error';
+            mantenimientoEl.textContent = 'Error';
+            listaAlertasEl.innerHTML = '<li>Error al cargar alertas.</li>';
+            listaActividadEl.innerHTML = '<li>Error al cargar actividad.</li>';
+        }
+    }
+  </script>
 </body>
 </html>
