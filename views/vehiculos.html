@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Vehículos - FleetControl-Pro</title>
-  <link rel="stylesheet" href="/style.css"> </head>
+  <link rel="stylesheet" href="/style.css">
+</head>
 <body>
   <header>
     <h1>FleetControl-Pro</h1>
@@ -12,70 +13,221 @@
       <a href="/dashboard">Dashboard</a> |
       <a href="/asignacion">Asignar Vehículo</a> |
       <a href="/status">Estado de Vehículos</a> |
-      <a href="/vehiculos">Gestión de Vehículos</a> | 
+      <a href="/vehiculos">Gestión de Vehículos</a> |
       <a href="#" id="logoutButton">Cerrar Sesion</a>
     </nav>
   </header>
 
   <main>
-    <div class="container"> <section class="section-card"> <h2>Inventario de Vehículos</h2>
+    <div class="container">
+      <section class="section-card gestion-vehiculos-form">
+        <h2>Añadir Nuevo Vehículo</h2>
+        <form id="formAnadirVehiculo">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="marca">Marca</label>
+              <input type="text" id="marca" name="marca" required>
+            </div>
+            <div class="form-group">
+              <label for="modelo">Modelo</label>
+              <input type="text" id="modelo" name="modelo" required>
+            </div>
+            <div class="form-group">
+              <label for="matricula">Matrícula (Patente)</label>
+              <input type="text" id="matricula" name="matricula" required>
+            </div>
+            <div class="form-group">
+              <label for="ano_adquisicion">Año Adquisición</label>
+              <input type="number" id="ano_adquisicion" name="ano_adquisicion" min="1900" max="2099" step="1" required>
+            </div>
+            <div class="form-group">
+              <label for="kilometraje">Kilometraje Inicial</label>
+              <input type="number" id="kilometraje" name="kilometraje" min="0" step="1" value="0">
+            </div>
+            <div class="form-group">
+              <label for="estadoVehiculo">Estado Inicial</label>
+              <select id="estadoVehiculo" name="estado">
+                <option value="disponible" selected>Disponible</option>
+                <option value="mantenimiento">En Mantenimiento</option>
+                <option value="requiere_atencion">Requiere Atención</option>
+                </select>
+            </div>
+          </div>
+          <button type="submit">Añadir Vehículo</button>
+          <p id="mensajeAnadirVehiculo" style="margin-top: 10px; text-align: center;"></p>
+        </form>
+      </section>
 
-        <div class="table-container"> <table>
+      <section class="section-card">
+        <h2>Inventario de Vehículos</h2>
+        <div class="table-container">
+          <table id="tablaInventarioVehiculos">
             <thead>
               <tr>
-                <th>Patente / ID</th>
+                <th>Matrícula</th>
                 <th>Marca</th>
                 <th>Modelo</th>
                 <th>Año</th>
                 <th>Estado</th>
                 <th>Asignado a</th>
+                <th>Kilometraje</th>
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>ABCD12</td>
-                <td>Toyota</td>
-                <td>Hilux</td>
-                <td>2021</td>
-                <td><span class="status-ok">Disponible</span></td>
-                <td>N/A</td>
-                <td><button type="button" class="btn-details">Ver Detalles</button></td>
-              </tr>
-              <tr>
-                <td>EFGH34</td>
-                <td>Kia</td>
-                <td>Morning</td>
-                <td>2020</td>
-                <td><span class="status-uso">En Uso</span></td>
-                <td>María Gómez</td>
-                 <td><button type="button" class="btn-details">Ver Detalles</button></td>
-              </tr>
-              <tr>
-                <td>IJKL56</td>
-                <td>Ferrari</td>
-                <td>F8 Tributo</td>
-                <td>2023</td>
-                <td><span class="status-mant">Mantenimiento</span></td>
-                <td>N/A</td>
-                 <td><button type="button" class="btn-details">Ver Detalles</button></td>
-              </tr>
-               <tr>
-                <td>MNOP78</td>
-                <td>Chevrolet</td>
-                <td>NPR 816</td>
-                <td>2019</td>
-                 <td><span class="status-ok">Disponible</span></td>
-                <td>N/A</td>
-                 <td><button type="button" class="btn-details">Ver Detalles</button></td>
-              </tr>
-              </tbody>
+            <tbody id="tbodyInventarioVehiculos">
+              <tr><td colspan="8" style="text-align:center;">Cargando inventario...</td></tr>
+            </tbody>
           </table>
         </div>
-        </section> </div> </main>
+      </section>
+    </div>
+  </main>
 
   <footer>
     <p>&copy; 2025 FleetControl-Pro Copyright</p>
   </footer>
+
+  <script>
+    // ----- Simulación de Sesión y Logout -----
+    let userDataGlobal = null; 
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = sessionStorage.getItem('fleetControlUserLoggedIn');
+        const userDataString = sessionStorage.getItem('fleetControlUserData');
+        
+        if (isLoggedIn !== 'true' || !userDataString) {
+            window.location.href = '/'; 
+        } else {
+            try {
+                userDataGlobal = JSON.parse(userDataString);
+                if (!userDataGlobal || !userDataGlobal.id || !userDataGlobal.nombreUsuario) {
+                    console.error("Datos de usuario en sessionStorage incompletos o inválidos:", userDataGlobal);
+                    sessionStorage.clear(); 
+                    window.location.href = '/';
+                    return; 
+                }
+                console.log('Usuario logueado en Gestión de Vehículos:', userDataGlobal.nombreUsuario);
+                inicializarPaginaGestionVehiculos();
+            } catch (e) {
+                console.error("Error parseando datos de usuario o datos inválidos:", e);
+                sessionStorage.clear(); 
+                window.location.href = '/';
+            }
+        }
+
+        const logoutButtonEl = document.getElementById('logoutButton');
+        if (logoutButtonEl) {
+            logoutButtonEl.addEventListener('click', function(event) {
+                event.preventDefault();
+                sessionStorage.removeItem('fleetControlUserLoggedIn');
+                sessionStorage.removeItem('fleetControlUserData');
+                window.location.href = '/';
+            });
+        }
+    });
+
+    // ----- Elementos del DOM -----
+    const formAnadirVehiculoEl = document.getElementById('formAnadirVehiculo');
+    const mensajeAnadirVehiculoEl = document.getElementById('mensajeAnadirVehiculo');
+    const tbodyInventarioVehiculosEl = document.getElementById('tbodyInventarioVehiculos');
+
+    // ----- Funciones Principales -----
+    async function inicializarPaginaGestionVehiculos() {
+        await cargarInventarioVehiculos();
+    }
+
+    // 1. Cargar Inventario de Vehículos
+    async function cargarInventarioVehiculos() {
+        tbodyInventarioVehiculosEl.innerHTML = '<tr><td colspan="8" style="text-align:center;">Cargando inventario...</td></tr>';
+        try {
+            // Usamos el endpoint GET /api/vehiculos que ya tiene la info de asignación
+            const response = await fetch('/api/vehiculos'); 
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+            const vehiculos = await response.json();
+
+            tbodyInventarioVehiculosEl.innerHTML = ''; 
+            if (vehiculos.length === 0) {
+                tbodyInventarioVehiculosEl.innerHTML = '<tr><td colspan="8" style="text-align:center;">No hay vehículos en el inventario.</td></tr>';
+                return;
+            }
+
+            vehiculos.forEach(v => {
+                const row = tbodyInventarioVehiculosEl.insertRow();
+                row.insertCell().textContent = v.matricula || 'N/A';
+                row.insertCell().textContent = v.marca || 'N/A';
+                row.insertCell().textContent = v.modelo || 'N/A';
+                row.insertCell().textContent = v.ano_adquisicion || 'N/A';
+                
+                const estadoCell = row.insertCell();
+                const estadoSpan = document.createElement('span');
+                estadoSpan.className = `status-${v.estado ? v.estado.toLowerCase().replace(/_/g, '-') : 'desconocido'}`;
+                estadoSpan.textContent = v.estado || 'Desconocido';
+                estadoCell.appendChild(estadoSpan);
+                
+                const asignadoA = v.nombre_empleado_asignado ? `${v.nombre_empleado_asignado} ${v.apellido_empleado_asignado || ''}`.trim() : 'N/A';
+                row.insertCell().textContent = asignadoA;
+                row.insertCell().textContent = v.kilometraje !== null && v.kilometraje !== undefined ? v.kilometraje.toLocaleString('es-CL') : 'N/A';
+                
+                const accionesCell = row.insertCell();
+                const btnDetalles = document.createElement('button');
+                btnDetalles.textContent = 'Ver Detalles';
+                btnDetalles.classList.add('btn-details');
+                btnDetalles.onclick = () => alert(`Detalles para vehículo ID: ${v.id_vehiculo} (Funcionalidad pendiente)`);
+                accionesCell.appendChild(btnDetalles);
+                // Aquí podrías añadir botones de Editar/Eliminar más adelante
+            });
+        } catch (error) {
+            console.error('Error al cargar inventario de vehículos:', error);
+            tbodyInventarioVehiculosEl.innerHTML = '<tr><td colspan="8" style="text-align:center;">Error al cargar el inventario.</td></tr>';
+        }
+    }
+
+    // 2. Manejar envío del formulario "Añadir Nuevo Vehículo"
+    formAnadirVehiculoEl.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        mensajeAnadirVehiculoEl.textContent = 'Añadiendo vehículo...';
+        mensajeAnadirVehiculoEl.style.color = 'white';
+
+        const formData = new FormData(formAnadirVehiculoEl);
+        const data = {
+            marca: formData.get('marca'),
+            modelo: formData.get('modelo'),
+            matricula: formData.get('matricula'),
+            ano_adquisicion: parseInt(formData.get('ano_adquisicion'), 10),
+            kilometraje: parseInt(formData.get('kilometraje'), 10) || 0,
+            estado: formData.get('estado') || 'disponible'
+        };
+
+        if (!data.marca || !data.modelo || !data.matricula || !data.ano_adquisicion) {
+            mensajeAnadirVehiculoEl.textContent = 'Por favor, complete todos los campos requeridos (Marca, Modelo, Matrícula, Año).';
+            mensajeAnadirVehiculoEl.style.color = 'orange';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/vehiculos', { // POST a /api/vehiculos
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                mensajeAnadirVehiculoEl.textContent = result.message || 'Vehículo añadido con éxito.';
+                mensajeAnadirVehiculoEl.style.color = 'lightgreen';
+                formAnadirVehiculoEl.reset();
+                cargarInventarioVehiculos(); // Recargar la tabla del inventario
+            } else {
+                mensajeAnadirVehiculoEl.textContent = `Error: ${result.error || response.statusText}`;
+                mensajeAnadirVehiculoEl.style.color = 'salmon';
+            }
+        } catch (error) {
+            console.error('Error al añadir vehículo:', error);
+            mensajeAnadirVehiculoEl.textContent = 'Error de conexión al intentar añadir el vehículo.';
+            mensajeAnadirVehiculoEl.style.color = 'salmon';
+        }
+    });
+
+  </script>
 </body>
 </html>

@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Estado de Vehículos - FleetControl-Pro</title>
-  <link rel="stylesheet" href="/style.css"> </head>
+  <link rel="stylesheet" href="/style.css">
+</head>
 <body>
   <header>
     <h1>FleetControl-Pro</h1>
@@ -13,48 +14,27 @@
       <a href="/asignacion">Asignar Vehículo</a> |
       <a href="/status">Estado de Vehículos</a> |
       <a href="/vehiculos">Gestión de Vehículos</a> |
-      <a href="/">Cerrar Sesion</a> 
+      <a href="#" id="logoutButton">Cerrar Sesion</a>
     </nav>
   </header>
 
   <main>
-    <div class="container"> <section class="status-vehiculos section-card">
+    <div class="container">
+      <section class="status-vehiculos section-card">
         <h2>Estado Actual de la Flota</h2>
         <div class="table-container">
-          <table>
+          <table id="tablaEstadoFlota">
             <thead>
               <tr>
-                <th>Vehículo (ID/Patente)</th>
-                <th>Estado</th>
+                <th>Vehículo (Matrícula)</th>
+                <th>Marca / Modelo</th>
+                <th>Estado Actual</th>
                 <th>Asignado a</th>
-                <th>Problema Reportado</th>
+                <th>Último Reporte Activo</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Camioneta (ABCD12)</td>
-                <td><span class="status-ok">Disponible</span></td>
-                <td>N/A</td>
-                <td>No</td>
-              </tr>
-              <tr>
-                <td>Auto Promedio (EFGH34)</td>
-                <td><span class="status-uso">En Uso</span></td>
-                <td>María Gómez</td>
-                <td>No</td>
-              </tr>
-              <tr>
-                <td>Ferrari (IJKL56)</td>
-                <td><span class="status-mant">Mantenimiento</span></td>
-                <td>N/A</td>
-                <td>Sí (Ver abajo)</td>
-              </tr>
-               <tr>
-                <td>Camioneta (MNOP78)</td>
-                <td><span class="status-ok">Disponible</span></td>
-                <td>N/A</td>
-                <td>No</td>
-              </tr>
+            <tbody id="tbodyEstadoFlota">
+              <tr><td colspan="5" style="text-align:center;">Cargando estado de la flota...</td></tr>
             </tbody>
           </table>
         </div>
@@ -62,81 +42,375 @@
 
       <section class="reportar-problema section-card">
         <h2>Reportar un Problema</h2>
-        <form> <div class="form-group">
-            <label for="vehiculo-problema">Seleccionar Vehículo</label>
-            <select id="vehiculo-problema">
-              <option value="vehiculo1">Camioneta (ABCD12)</option>
-              <option value="vehiculo2">Auto Promedio (EFGH34)</option>
-              <option value="vehiculo3">Ferrari (IJKL56)</option>
-              <option value="vehiculo4">Camioneta (MNOP78)</option>
-              </select>
+        <form id="formReportarProblema">
+          <div class="form-group">
+            <label for="selectVehiculoReporte">Seleccionar Vehículo</label>
+            <select id="selectVehiculoReporte" name="id_vehiculo" required>
+              <option value="">Cargando vehículos...</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="descripcion-problema">Descripción del Problema</label>
-            <textarea id="descripcion-problema" rows="4" placeholder="Describe el problema encontrado..."></textarea>
+            <label for="descripcionProblema">Descripción del Problema</label>
+            <textarea id="descripcionProblema" name="descripcion" rows="4" placeholder="Describe el problema encontrado..." required></textarea>
           </div>
-          <button type="button">Reportar Problema</button> </form>
+          <button type="submit">Reportar Problema</button>
+          <p id="mensajeReporte" style="margin-top: 10px; text-align: center;"></p>
+        </form>
       </section>
 
       <section class="asignar-reparacion section-card">
         <h2>Problemas Reportados</h2>
-         <div class="table-container">
-          <table>
+        <div class="table-container">
+          <table id="tablaProblemasReportados">
             <thead>
               <tr>
                 <th>Vehículo</th>
                 <th>Problema Descrito</th>
                 <th>Reportado Por</th>
-                <th>Estado Reparación</th>
-                <th>Mecánico Asignado</th>
-                <th>Asignar Mecánico</th> </tr>
+                <th>Fecha Reporte</th>
+                <th>Estado del Reporte</th>
+                <th>Mecánico Asignado (Mantenimiento)</th>
+                <th>Acciones</th>
+              </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Ferrari (IJKL56)</td>
-                <td>Ruido extraño en el motor al acelerar.</td>
-                <td>Juan Pérez</td>
-                <td><span class="status-rep">Reportado</span></td>
-                <td>N/A</td>
-                <td>
-                  <select class="select-mecanico" name="asignar-mecanico-1">
-                    <option value="" disabled selected>-- Seleccionar --</option>
-                    <option value="mecanico_a">Carlos (Interno)</option>
-                    <option value="mecanico_b">Taller Externo Alfa</option>
-                    <option value="mecanico_c">Mecánico Jefe</option>
-                    </select>
-                  </td>
-              </tr>
-              <tr>
-                <td>Auto Promedio (EFGH34)</td>
-                <td>Luz de check engine encendida.</td>
-                <td>María Gómez</td>
-                <td><span class="status-proc">En Proceso</span></td>
-                <td>Carlos (Externo)</td>
-                <td>N/A</td> </tr>
-              <tr>
-                <td>Camioneta (ABCD12)</td>
-                <td>Fuga de aceite leve.</td>
-                <td>Ana Martínez</td>
-                <td><span class="status-rep">Reportado</span></td>
-                <td>N/A</td>
-                 <td>
-                   <select class="select-mecanico" name="asignar-mecanico-2">
-                     <option value="" disabled selected>-- Seleccionar --</option>
-                     <option value="mecanico_a">Carlos (Interno)</option>
-                     <option value="mecanico_b">Taller Externo Alfa</option>
-                     <option value="mecanico_c">Mecánico Jefe</option>
-                   </select>
-                 </td>
-              </tr>
+            <tbody id="tbodyProblemasReportados">
+              <tr><td colspan="7" style="text-align:center;">Cargando problemas reportados...</td></tr>
             </tbody>
           </table>
         </div>
       </section>
-
-    </div> </main>
+    </div>
+  </main>
 
   <footer>
-    <p>&copy; 2025 FleetControl-Pro Copyright</p> </footer>
+    <p>&copy; 2025 FleetControl-Pro Copyright</p>
+  </footer>
+
+  <script>
+    // ----- Simulación de Sesión y Logout -----
+    let userDataGlobal = null; 
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = sessionStorage.getItem('fleetControlUserLoggedIn');
+        const userDataString = sessionStorage.getItem('fleetControlUserData');
+        
+        if (isLoggedIn !== 'true' || !userDataString) {
+            window.location.href = '/'; 
+        } else {
+            try {
+                userDataGlobal = JSON.parse(userDataString);
+                if (!userDataGlobal || !userDataGlobal.id || !userDataGlobal.nombreUsuario) { 
+                    console.error("Datos de usuario en sessionStorage incompletos o inválidos:", userDataGlobal);
+                    sessionStorage.clear(); 
+                    window.location.href = '/';
+                    return; // Detener ejecución si los datos del usuario son inválidos
+                }
+                console.log('Usuario logueado en Status:', userDataGlobal.nombreUsuario, 'ID Usuario:', userDataGlobal.id, 'ID Empleado Asociado (si existe):', userDataGlobal.id_empleado_asociado);
+                inicializarPaginaEstado();
+            } catch (e) {
+                console.error("Error parseando datos de usuario o datos inválidos:", e);
+                sessionStorage.clear(); 
+                window.location.href = '/';
+            }
+        }
+
+        const logoutButtonEl = document.getElementById('logoutButton');
+        if (logoutButtonEl) {
+            logoutButtonEl.addEventListener('click', function(event) {
+                event.preventDefault();
+                sessionStorage.removeItem('fleetControlUserLoggedIn');
+                sessionStorage.removeItem('fleetControlUserData');
+                window.location.href = '/';
+            });
+        }
+    });
+
+    // ----- Elementos del DOM -----
+    const tbodyEstadoFlotaEl = document.getElementById('tbodyEstadoFlota');
+    const selectVehiculoReporteEl = document.getElementById('selectVehiculoReporte');
+    const formReportarProblemaEl = document.getElementById('formReportarProblema');
+    const descripcionProblemaEl = document.getElementById('descripcionProblema');
+    const mensajeReporteEl = document.getElementById('mensajeReporte');
+    const tbodyProblemasReportadosEl = document.getElementById('tbodyProblemasReportados');
+
+    // ----- Funciones Principales -----
+    async function inicializarPaginaEstado() {
+        await cargarEstadoFlota();
+        await cargarVehiculosParaSelectReporte();
+        await cargarProblemasReportados();
+    }
+
+    // 1. Cargar Estado Actual de la Flota
+    async function cargarEstadoFlota() {
+        tbodyEstadoFlotaEl.innerHTML = '<tr><td colspan="5" style="text-align:center;">Cargando estado de la flota...</td></tr>';
+        try {
+            const response = await fetch('/api/vehiculos'); 
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+            const vehiculos = await response.json();
+
+            tbodyEstadoFlotaEl.innerHTML = ''; 
+            if (vehiculos.length === 0) {
+                tbodyEstadoFlotaEl.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay vehículos registrados.</td></tr>';
+                return;
+            }
+
+            vehiculos.forEach(v => {
+                const row = tbodyEstadoFlotaEl.insertRow();
+                row.insertCell().textContent = v.matricula || 'N/A';
+                row.insertCell().textContent = `${v.marca || ''} ${v.modelo || ''}`;
+                
+                const estadoCell = row.insertCell();
+                const estadoSpan = document.createElement('span');
+                estadoSpan.className = `status-${v.estado ? v.estado.toLowerCase().replace(/_/g, '-') : 'desconocido'}`;
+                estadoSpan.textContent = v.estado || 'Desconocido';
+                estadoCell.appendChild(estadoSpan);
+                
+                // Mostrar nombre del empleado si está asignado
+                const asignadoA = v.nombre_empleado_asignado ? `${v.nombre_empleado_asignado} ${v.apellido_empleado_asignado || ''}`.trim() : 'N/A';
+                row.insertCell().textContent = asignadoA;
+                
+                const reporteCell = row.insertCell();
+                if (v.ultimo_reporte_descripcion) {
+                    const reporteSpan = document.createElement('span');
+                    reporteSpan.className = 'status-rep'; 
+                    reporteSpan.textContent = 'Sí';
+                    reporteSpan.title = v.ultimo_reporte_descripcion;
+                    reporteCell.appendChild(reporteSpan);
+                } else {
+                    reporteCell.textContent = 'No';
+                }
+            });
+        } catch (error) {
+            console.error('Error al cargar estado de la flota:', error);
+            tbodyEstadoFlotaEl.innerHTML = '<tr><td colspan="5" style="text-align:center;">Error al cargar datos.</td></tr>';
+        }
+    }
+
+    // 2. Cargar vehículos en el select para reportar problemas
+    async function cargarVehiculosParaSelectReporte() {
+        selectVehiculoReporteEl.innerHTML = '<option value="">Cargando vehículos...</option>';
+        try {
+            const response = await fetch('/api/vehiculos/todos'); 
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const vehiculos = await response.json();
+            
+            selectVehiculoReporteEl.innerHTML = '<option value="">-- Seleccione Vehículo --</option>';
+            if (vehiculos.length === 0) {
+                selectVehiculoReporteEl.innerHTML += '<option value="" disabled>No hay vehículos</option>';
+            }
+            vehiculos.forEach(v => {
+                const option = document.createElement('option');
+                option.value = v.id_vehiculo;
+                option.textContent = `${v.marca} ${v.modelo} (Matrícula: ${v.matricula})`;
+                selectVehiculoReporteEl.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error al cargar vehículos para reporte:', error);
+            selectVehiculoReporteEl.innerHTML = '<option value="">Error al cargar</option>';
+        }
+    }
+
+    // 3. Manejar envío del formulario "Reportar Problema"
+    formReportarProblemaEl.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        mensajeReporteEl.textContent = 'Enviando reporte...';
+        mensajeReporteEl.style.color = 'white';
+
+        if (!userDataGlobal || (!userDataGlobal.id_empleado_asociado && !userDataGlobal.id)) {
+             mensajeReporteEl.textContent = 'Error: No se pudo identificar al empleado para el reporte. Recargue la página e inicie sesión de nuevo.';
+             mensajeReporteEl.style.color = 'salmon';
+             console.error('userDataGlobal no contiene id_empleado_asociado o id para el reporte:', userDataGlobal);
+             return;
+        }
+        // Prioriza id_empleado_asociado si existe, sino usa el id del usuario.
+        // Asegúrate de que el id que se usa aquí sea el ID correcto de la tabla Empleado.
+        const idDelEmpleadoQueReporta = userDataGlobal.id_empleado_asociado || userDataGlobal.id;
+
+        const data = {
+            id_vehiculo: selectVehiculoReporteEl.value,
+            id_empleado: idDelEmpleadoQueReporta, 
+            descripcion: descripcionProblemaEl.value,
+            // El estado se asigna en el backend
+        };
+
+        if (!data.id_vehiculo || !data.descripcion) {
+            mensajeReporteEl.textContent = 'Por favor, seleccione un vehículo y describa el problema.';
+            mensajeReporteEl.style.color = 'orange';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/reportes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                mensajeReporteEl.textContent = result.message || 'Reporte enviado con éxito.';
+                mensajeReporteEl.style.color = 'lightgreen';
+                formReportarProblemaEl.reset();
+                inicializarPaginaEstado(); // Recargar las tablas
+            } else {
+                mensajeReporteEl.textContent = `Error: ${result.error || response.statusText}`;
+                mensajeReporteEl.style.color = 'salmon';
+            }
+        } catch (error) {
+            console.error('Error al enviar reporte:', error);
+            mensajeReporteEl.textContent = 'Error de conexión al enviar el reporte.';
+            mensajeReporteEl.style.color = 'salmon';
+        }
+    });
+
+    // 4. Cargar Problemas Reportados
+    async function cargarProblemasReportados() {
+        tbodyProblemasReportadosEl.innerHTML = '<tr><td colspan="7" style="text-align:center;">Cargando problemas reportados...</td></tr>';
+        try {
+            const response = await fetch('/api/reportes'); 
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
+            const reportes = await response.json();
+            console.log(reportes)
+
+            tbodyProblemasReportadosEl.innerHTML = '';
+            if (reportes.length === 0) {
+                tbodyProblemasReportadosEl.innerHTML = '<tr><td colspan="7" style="text-align:center;">No hay problemas reportados.</td></tr>';
+                return;
+            }
+
+            const resMecanicos = await fetch('/api/mecanicos');
+            const mecanicos = resMecanicos.ok ? await resMecanicos.json() : [];
+
+            reportes.forEach(r => {
+                const row = tbodyProblemasReportadosEl.insertRow();
+                row.insertCell().textContent = `${r.vehiculo_marca || ''} ${r.vehiculo_modelo || ''} (${r.vehiculo_matricula || 'N/A'})`;
+                row.insertCell().textContent = r.descripcion;
+                row.insertCell().textContent = `${r.empleado_nombre || ''} ${r.empleado_apellido || ''}`;
+                row.insertCell().textContent = new Date(r.fecha_reporte).toLocaleDateString('es-CL', {day: '2-digit', month: '2-digit', year: 'numeric'});
+                
+                const estadoReporteCell = row.insertCell();
+                const estadoReporteSpan = document.createElement('span');
+                estadoReporteSpan.className = `status-${r.estado_reporte ? r.estado_reporte.toLowerCase().replace(/_/g, '-') : 'desconocido'}`;
+                estadoReporteSpan.textContent = r.estado_reporte || 'Desconocido';
+                estadoReporteCell.appendChild(estadoReporteSpan);
+                
+                row.insertCell().textContent = r.mecanico_asignado_nombre ? `${r.mecanico_asignado_nombre} ${r.mecanico_asignado_apellido || ''}` : 'N/A';
+                
+                const accionesCell = row.insertCell();
+                accionesCell.style.textAlign = 'center'; 
+
+                if (r.estado_reporte === 'reportado' || r.estado_reporte === 'pendiente') {
+                    const selectMec = document.createElement('select');
+                    selectMec.classList.add('select-mecanico');
+                    selectMec.innerHTML = '<option value="">-- Asignar --</option>';
+                    if (mecanicos.length > 0) {
+                        mecanicos.forEach(m => {
+                            selectMec.innerHTML += `<option value="${m.id_mecanico}">${m.nombre} ${m.apellido}</option>`;
+                        });
+                    } else {
+                         selectMec.innerHTML += '<option value="" disabled>No hay mecánicos</option>';
+                    }
+                    
+                    const btnAsignar = document.createElement('button');
+                    btnAsignar.textContent = 'Asignar';
+                    btnAsignar.classList.add('btn-details'); 
+                    btnAsignar.style.marginLeft = '5px';
+                    btnAsignar.style.padding = '0.3rem 0.6rem'; 
+                    btnAsignar.onclick = () => asignarMecanicoAReporte(r.id_reporte, selectMec.value, r.id_vehiculo);
+                    
+                    accionesCell.appendChild(selectMec);
+                    accionesCell.appendChild(btnAsignar);
+
+                } else if (r.estado_reporte === 'en_proceso' && r.id_mantenimiento_asociado) {
+                    const btnFinalizar = document.createElement('button');
+                    btnFinalizar.textContent = 'Finalizar Mantenimiento';
+                    btnFinalizar.classList.add('btn-details');
+                    btnFinalizar.style.backgroundColor = '#28a745'; 
+                    btnFinalizar.style.padding = '0.3rem 0.6rem';
+                    btnFinalizar.onclick = () => finalizarMantenimiento(r.id_mantenimiento_asociado, r.id_vehiculo);
+                    accionesCell.appendChild(btnFinalizar);
+                } else {
+                    accionesCell.textContent = '-';
+                }
+            });
+        } catch (error) {
+            console.error('Error al cargar problemas reportados:', error);
+            tbodyProblemasReportadosEl.innerHTML = '<tr><td colspan="7" style="text-align:center;">Error al cargar datos.</td></tr>';
+        }
+    }
+
+    // 5. Asignar Mecánico a Reporte y Crear Mantenimiento
+    async function asignarMecanicoAReporte(id_reporte, id_mecanico, id_vehiculo) {
+        if (!id_mecanico) {
+            alert('Por favor, seleccione un mecánico.');
+            return;
+        }
+        const tipo_mantenimiento = prompt(`Breve descripción o tipo de mantenimiento para el reporte #${id_reporte}:`, "Revisión por reporte No. " + id_reporte);
+        if (tipo_mantenimiento === null) return; 
+
+        const data = {
+            id_vehiculo: id_vehiculo,
+            id_mecanico: id_mecanico,
+            tipo_mantenimiento: tipo_mantenimiento,
+            fecha_mantenimiento: new Date().toISOString().split('T')[0], 
+            observaciones: `Mantenimiento iniciado a partir del reporte ID: ${id_reporte}.`,
+            id_reporte_asociado: id_reporte 
+        };
+
+        try {
+            const response = await fetch('/api/mantenimientos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message || 'Mecánico asignado y mantenimiento iniciado.');
+                inicializarPaginaEstado(); 
+            } else {
+                alert(`Error al asignar mecánico: ${result.error || response.statusText}`);
+            }
+        } catch (error) {
+            console.error('Error al asignar mecánico:', error);
+            alert('Error de conexión al asignar mecánico.');
+        }
+    }
+
+    // 6. Finalizar Mantenimiento
+    async function finalizarMantenimiento(id_mantenimiento, id_vehiculo) {
+        const observaciones_finales = prompt("Observaciones al finalizar el mantenimiento (opcional):");
+        if (observaciones_finales === null && !confirm("¿Desea finalizar el mantenimiento sin observaciones adicionales?")) return;
+
+        const opcionesEstado = ['disponible', 'en_uso', 'requiere_atencion']; // Estados válidos post-mantenimiento
+        let nuevo_estado_vehiculo = prompt(`Nuevo estado del vehículo después del mantenimiento (ej: ${opcionesEstado.join(', ')}):`, "disponible");
+
+        if (nuevo_estado_vehiculo === null) return;
+        nuevo_estado_vehiculo = nuevo_estado_vehiculo.trim().toLowerCase();
+        if (!opcionesEstado.includes(nuevo_estado_vehiculo)) {
+            alert(`Estado de vehículo inválido. Debe ser uno de: ${opcionesEstado.join(', ')}`);
+            return;
+        }
+        
+        try {
+             const response = await fetch(`/api/mantenimientos/${id_mantenimiento}/finalizar`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    observaciones_finales: observaciones_finales || '',
+                    nuevo_estado_vehiculo: nuevo_estado_vehiculo 
+                })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message || 'Mantenimiento finalizado con éxito.');
+                inicializarPaginaEstado();
+            } else {
+                alert(`Error: ${result.error || 'No se pudo finalizar el mantenimiento.'}`);
+            }
+        } catch (error) {
+            console.error('Error al finalizar mantenimiento:', error);
+            alert('Error de conexión al finalizar mantenimiento.');
+        }
+    }
+  </script>
 </body>
 </html>
