@@ -27,74 +27,95 @@
         <button type="submit">Ingresar</button>
         <p id="loginMensaje" style="margin-top: 15px; text-align: center; color: white;"></p>
       </form>
-    </section>
+
+      <button type="button" id="bypassLoginButton" style="background-color: #ffc107; color: #222; margin-top: 20px; padding: 0.8rem; font-size: 1rem; border: none; border-radius: 4px; cursor: pointer; width: 100%;">Entrar Directo (Desarrollo)</button>
+      </section>
   </main>
 
   <footer>
     <p>&copy; 2025 FleetControl-Pro Copyright</p>
   </footer>
+
   <script>
     const loginFormEl = document.getElementById('loginForm');
-    const nombreUsuarioInputEl = document.getElementById('nombreUsuario'); // Corregido el nombre de la variable
-    const passwordInputEl = document.getElementById('password'); // Corregido el nombre de la variable
+    const nombreUsuarioInputEl = document.getElementById('nombreUsuario');
+    const passwordInputEl = document.getElementById('password');
     const loginMensajeEl = document.getElementById('loginMensaje');
+    const bypassLoginButtonEl = document.getElementById('bypassLoginButton');
 
-    // Limpiar cualquier "sesión" simulada al cargar la página de login
+    // Limpiar "sesión" simulada al cargar
     sessionStorage.removeItem('fleetControlUserLoggedIn');
     sessionStorage.removeItem('fleetControlUserData');
 
+    if (loginFormEl) {
+        loginFormEl.addEventListener('submit', async function(event) {
+          event.preventDefault();
+          loginMensajeEl.textContent = 'Procesando...';
+          loginMensajeEl.style.color = 'white';
 
-    loginFormEl.addEventListener('submit', async function(event) {
-      event.preventDefault(); // Prevenir el envío tradicional del formulario
-      loginMensajeEl.textContent = 'Procesando...';
-      loginMensajeEl.style.color = 'white'; // Color neutral mientras procesa
+          const nombreUsuario = nombreUsuarioInputEl.value;
+          const password = passwordInputEl.value;
 
-      const nombreUsuario = nombreUsuarioInputEl.value;
-      const password = passwordInputEl.value;
-
-      if (!nombreUsuario || !password) {
-        loginMensajeEl.textContent = 'Por favor, ingresa nombre de usuario y contraseña.';
-        loginMensajeEl.style.color = 'orange'; // Un color para advertencias leves
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ nombreUsuario, password }), // Asegúrate que las claves coincidan con req.body en el backend
-        });
-
-        const result = await response.json(); // Siempre intenta parsear la respuesta como JSON
-
-        if (response.ok) { // Status 200-299 indica éxito
-          loginMensajeEl.textContent = result.message || 'Login exitoso. Redirigiendo...';
-          loginMensajeEl.style.color = 'lightgreen'; // Verde para éxito
-
-          // Simulación de sesión para uso local: guardar info del usuario en sessionStorage
-          if (result.usuario) {
-            sessionStorage.setItem('fleetControlUserLoggedIn', 'true');
-            sessionStorage.setItem('fleetControlUserData', JSON.stringify(result.usuario));
+          if (!nombreUsuario || !password) {
+            loginMensajeEl.textContent = 'Por favor, ingresa nombre de usuario y contraseña.';
+            loginMensajeEl.style.color = 'orange';
+            return;
           }
 
-          // Redirigir al dashboard después de un breve momento
-          setTimeout(() => {
-            window.location.href = '/dashboard';
-          }, 1000);
+          try {
+            const response = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ nombreUsuario, password }), // El backend espera nombreUsuario
+            });
+            const result = await response.json();
 
-        } else { // Error (status 4xx o 5xx)
-          loginMensajeEl.textContent = `Error: ${result.error || 'Credenciales incorrectas o error del servidor.'}`;
-          loginMensajeEl.style.color = 'salmon'; // Rojo/salmón para errores
-        }
-      } catch (error) {
-        // Este catch es para errores de red (ej. el servidor no responde) o si response.json() falla
-        console.error('Error de red o al parsear JSON en el login:', error);
-        loginMensajeEl.textContent = 'Error de conexión al intentar iniciar sesión. Intenta de nuevo.';
-        loginMensajeEl.style.color = 'salmon';
-      }
-    });
+            if (response.ok) {
+              loginMensajeEl.textContent = result.message || 'Login exitoso. Redirigiendo...';
+              loginMensajeEl.style.color = 'lightgreen';
+              if (result.usuario) {
+                sessionStorage.setItem('fleetControlUserLoggedIn', 'true');
+                sessionStorage.setItem('fleetControlUserData', JSON.stringify(result.usuario));
+              }
+              setTimeout(() => { window.location.href = '/dashboard'; }, 1000);
+            } else {
+              loginMensajeEl.textContent = `Error: ${result.error || 'Credenciales incorrectas o error del servidor.'}`;
+              loginMensajeEl.style.color = 'salmon';
+            }
+          } catch (error) {
+            console.error('Error de red o al parsear JSON en el login:', error);
+            loginMensajeEl.textContent = 'Error de conexión al intentar iniciar sesión. Intenta de nuevo.';
+            loginMensajeEl.style.color = 'salmon';
+          }
+        });
+    }
+
+    if (bypassLoginButtonEl) {
+      bypassLoginButtonEl.addEventListener('click', function() {
+        console.log('Bypass de login activado.');
+        // Simular un usuario logueado con datos genéricos.
+        // ¡IMPORTANTE! Si tus otras páginas (como status.html al reportar)
+        // esperan un 'id_empleado_asociado' y tu tabla 'usuarios' no lo tiene,
+        // deberás decidir qué ID enviar o cómo manejarlo.
+        // Si 'usuarios.id' es el que se usa como 'id_empleado', entonces esto está bien.
+        const mockUserData = {
+          id: 0, // ID del usuario (de la tabla usuarios)
+          nombreUsuario: 'usuario_bypass',
+          correo: 'bypass@example.com',
+          rol: 'admin', // Dale rol admin para probar todo
+          // Si tu tabla 'usuarios' SÍ tiene 'id_empleado_asociado' y lo necesitas, inclúyelo:
+          // id_empleado_asociado: 1, // Asegúrate que un Empleado con id 1 exista
+        };
+        sessionStorage.setItem('fleetControlUserLoggedIn', 'true');
+        sessionStorage.setItem('fleetControlUserData', JSON.stringify(mockUserData));
+        
+        loginMensajeEl.textContent = 'Entrada directa activada. Redirigiendo...';
+        loginMensajeEl.style.color = 'lightgoldenrodyellow'; // Un color diferente para el mensaje de bypass
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 500);
+      });
+    }
   </script>
 </body>
 </html>
